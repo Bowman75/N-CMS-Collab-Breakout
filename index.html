@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Breakout: Collaboration & Trust in Schools</title>
+<style>
+  :root{--bg:#f7f7fb;--card:#ffffff;--ink:#1f2937;--muted:#6b7280;--accent:#2563eb;--good:#16a34a;--bad:#dc2626;--border:#e5e7eb;--warn:#f59e0b}
+  html,body{margin:0;padding:0;font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:1100px;margin:24px auto;padding:16px}
+  h1{font-size:clamp(24px,2.6vw,34px);margin:8px 0 12px}
+  h2{font-size:clamp(18px,2.1vw,24px);margin:24px 0 8px}
+  p{line-height:1.5}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 6px 18px rgba(0,0,0,0.04);position:relative}
+  .scenario{border-left:4px solid var(--accent);padding-left:12px}
+  .media{display:grid;gap:14px;grid-template-columns:1fr}
+  .btn{appearance:none;border:1px solid var(--border);background:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  select,input[type="text"]{padding:10px;border:1px solid var(--border);border-radius:10px;width:100%;box-sizing:border-box}
+  .grid{display:grid;gap:14px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+  .hint{color:var(--muted);font-size:.92rem}
+  .ok{color:var(--good);font-weight:600}
+  .bad{color:var(--bad);font-weight:600}
+  .warn{color:var(--warn);font-weight:600}
+  .drag-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+  .drag-item{padding:10px 12px;border:1px dashed #cbd5e1;border-radius:12px;background:#fff;cursor:grab}
+  .drag-item.dragging{opacity:.6}
+  .wrong{border-color:var(--bad)!important;background:#fff5f5}
+  .right{border-color:var(--good)!important;background:#f1fff5}
+  .lock{font:700 22px/1 monospace;color:#111;background:#f3f4f6;border:1px solid var(--border);padding:6px 10px;border-radius:8px;display:inline-block}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:.85rem}
+  .source-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .source{border:1px solid var(--border);border-radius:14px;padding:12px;background:#fff}
+  .source h3{margin:0 0 6px;font-size:1rem}
+  .source a{color:var(--accent);text-decoration:none}
+  .kudos{display:inline-flex;gap:6px;align-items:center;font-size:.9rem}
+  .check{display:inline-block;width:10px;height:10px;border-radius:999px;background:#e5e7eb}
+  .check.done{background:var(--good)}
+  .gate-overlay{position:absolute;inset:0;border-radius:16px;background:rgba(255,255,255,.8);border:2px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px}
+  .footer-note{font-size:.9rem;color:var(--muted)}
+  .sr{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Breakout: Collaboration & Trust in Schools</h1>
+
+  <div class="card">
+    <p class="scenario"><strong>Storyline:</strong> Your PLC has 30 minutes before a school walkthrough. The principal wants evidence of how your team builds collaboration and trust. First, pull quick insights from the media. Then solve three challenges to unlock the “evidence locker.”</p>
+    <div class="media">
+      <div>
+        <span class="pill">Required: Podcast (play 30+ seconds)</span>
+        <div class="row" style="margin-top:8px;align-items:center">
+          <audio id="reqAudio" controls style="width:100%">
+            <source src="./assets/The_Collaboration_Blueprint__Building_High-Trust,_High-Performi.m4a" type="audio/mp4">
+            Your browser can’t play this audio.
+          </audio>
+          <span class="kudos"><span id="aChk" class="check" aria-hidden="true"></span><span id="aTxt" class="hint">Not yet played</span></span>
+        </div>
+      </div>
+      <div>
+        <span class="pill">Required: Video (play 30+ seconds)</span>
+        <div class="row" style="margin-top:8px;align-items:center">
+          <video id="reqVideo" controls style="width:100%">
+            <source src="./assets/videoplayback.mp4" type="video/mp4">
+            Your browser can’t play this video.
+          </video>
+          <span class="kudos"><span id="vChk" class="check" aria-hidden="true"></span><span id="vTxt" class="hint">Not yet played</span></span>
+        </div>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:8px">Puzzles unlock only after both have been played at least 30 seconds.</p>
+  </div>
+
+  <div class="card">
+    <h2>Source Library (optional)</h2>
+    <p class="hint">Consult any of these while solving.</p>
+    <div class="source-grid">
+      <div class="source"><h3>The Core Collaborative: 10 Ways to Build Trust</h3><a href="https://thecorecollaborative.com/10-ways-to-build-trust-in-schools/" target="_blank" rel="noopener">Open article ↗</a></div>
+      <div class="source"><h3>Edutopia: Practical Guide to Interdisciplinary PBL Collaboration</h3><a href="https://www.edutopia.org/article/practical-guide-interdisciplinary-pbl-collaboration/" target="_blank" rel="noopener">Open article ↗</a></div>
+      <div class="source"><h3>AMLE: Building Teacher Collaboration School-wide</h3><a href="https://www.amle.org/building-teacher-collaboration-school-wide/" target="_blank" rel="noopener">Open article ↗</a></div>
+      <div class="source"><h3>Kathleen Jasper: Understanding PLCs</h3><a href="https://kathleenjasper.com/blogs/news/understanding-professional-learning-communities-plc" target="_blank" rel="noopener">Open article ↗</a></div>
+      <div class="source"><h3>Collaborative Planning Protocols (PDF)</h3><a href="./assets/Collaborative-Planning-Protocols.pdf" target="_blank">Open PDF</a></div>
+      <div class="source"><h3>Collaborative Team Agenda Template (PDF)</h3><a href="./assets/collaborativeteamagendatemplate.pdf" target="_blank">Open PDF</a></div>
+      <div class="source"><h3>Dissertation: Improving Collaboration During CPT (PDF)</h3><a href="./assets/Final Dissertation ETD Approved Document.pdf" target="_blank">Open PDF</a></div>
+      <div class="source"><h3>ABC Co-Planning Agenda Sample (PDF)</h3><a href="./assets/ABC  Co-Planning Agenda Sample.pdf" target="_blank">Open PDF</a></div>
+    </div>
+  </div>
+
+  <div class="card gate" id="p1">
+    <div class="gate-overlay"><span class="warn">Locked. Play the required podcast and video for 30 seconds each to unlock.</span></div>
+    <h2>Puzzle 1 — Match the Move</h2>
+    <p>Match each hiccup with the highest-leverage collaborative move. Answers are shuffled.</p>
+    <div class="grid">
+      <div class="scenario"><strong>A.</strong> Team avoids disagreement; decisions happen after the meeting in the hallway.</div>
+      <select aria-label="Match A" id="p1a"></select>
+      <div class="scenario"><strong>B.</strong> New teacher feels left out of planning and speaks only at the end.</div>
+      <select aria-label="Match B" id="p1b"></select>
+      <div class="scenario"><strong>C.</strong> Data talk drifts into blaming students and low expectations.</div>
+      <select aria-label="Match C" id="p1c"></select>
+      <div class="scenario"><strong>D.</strong> Two departments duplicate work because no one shares drafts.</div>
+      <select aria-label="Match D" id="p1d"></select>
+      <div class="scenario"><strong>E.</strong> Team norms exist on paper but aren’t used when discussions get tense.</div>
+      <select aria-label="Match E" id="p1e"></select>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" onclick="checkP1()" disabled>Check answers</button>
+      <button class="btn" onclick="resetP1()" disabled>Reset</button>
+      <span id="p1status" class="hint"></span>
+    </div>
+  </div>
+
+  <div class="card gate" id="p2">
+    <div class="gate-overlay"><span class="warn">Locked. Play the required podcast and video for 30 seconds each to unlock.</span></div>
+    <h2>Puzzle 2 — Decode the Reminder</h2>
+    <p>Use A1-Z26 (A=1, B=2, ... Z=26). Decode the line and type it exactly.</p>
+    <div class="card" style="background:#f8fafc">
+      <code class="small">20-18-21-19-20 7-18-15-23-19 23-8-5-14 23-5 4-15 23-8-1-20 23-5 19-1-25,<br/>9-14-22-9-20-5 22-15-9-3-5-19, 1-14-4 6-15-12-12-15-23 20-8-18-15-21-7-8.</code>
+    </div>
+    <input id="p2input" type="text" placeholder="Type the decoded sentence here" />
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" onclick="checkP2()" disabled>Check answer</button>
+      <button class="btn" onclick="resetP2()" disabled>Reset</button>
+      <span id="p2status" class="hint"></span>
+    </div>
+  </div>
+
+  <div class="card gate" id="p3">
+    <div class="gate-overlay"><span class="warn">Locked. Play the required podcast and video for 30 seconds each to unlock.</span></div>
+    <h2>Puzzle 3 — Sequence the Commitment Steps</h2>
+    <p>Drag to place the collaborative steps in a productive order from first to last.</p>
+    <ol id="dragList" class="drag-list"></ol>
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" onclick="checkP3()" disabled>Check order</button>
+      <button class="btn" onclick="resetP3()" disabled>Reset</button>
+      <span id="p3status" class="hint"></span>
+    </div>
+  </div>
+
+  <div class="card" id="final">
+    <h2>Final Lock</h2>
+    <p>When all three puzzles are solved, you’ll have the 3-digit code. Enter it to open the evidence locker.</p>
+    <p>Code: <span class="lock">_ _ _</span></p>
+    <div class="row">
+      <input id="finalcode" type="text" maxlength="3" placeholder="Enter 3 digits" style="max-width:140px" />
+      <button class="btn primary" id="unlockBtn" onclick="unlock()" disabled>Unlock</button>
+      <span id="finalstatus" class="hint"></span>
+    </div>
+    <div id="prize" style="display:none;margin-top:12px">
+      <div style="height:1px;background:var(--border);margin:14px 0"></div>
+      <p class="ok">Unlocked! Download your quick-start checklist for the walk-through.</p>
+      <ul>
+        <li>Visible norms & roles posted</li>
+        <li>Structured protocol on today’s agenda</li>
+        <li>Shared planning doc open</li>
+        <li>Asset-based language visible in notes</li>
+        <li>Clear next step, owner, and date</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Optional Reflection</h2>
+    <p class="hint">Answer in 1–2 sentences.</p>
+    <input id="reflect" type="text" placeholder="What is one move you’ll try this week to build trust on your team?" />
+  </div>
+
+  <p class="footer-note">Incorrect answers are highlighted in red. Use the reset buttons to try again. Media must play 30+ seconds each to unlock puzzles.</p>
+</div>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function normalize(s){return (s||"").toLowerCase().replace(/[^a-z0-9 ]/g,"").replace(/\s+/g," ").trim();}
+let audioOK=false, videoOK=false;
+const reqAudio=document.getElementById('reqAudio');
+const reqVideo=document.getElementById('reqVideo');
+const aChk=document.getElementById('aChk');
+const vChk=document.getElementById('vChk');
+const aTxt=document.getElementById('aTxt');
+const vTxt=document.getElementById('vTxt');
+function updateGate(){
+  if(audioOK){ aChk.classList.add('done'); aTxt.textContent='✓ podcast met (30s)'; }
+  if(videoOK){ vChk.classList.add('done'); vTxt.textContent='✓ video met (30s)'; }
+  const open=audioOK&&videoOK;
+  document.querySelectorAll('.gate').forEach(card=>{
+    card.querySelectorAll('button').forEach(b=> b.disabled=!open);
+    const ov=card.querySelector('.gate-overlay'); if(ov){ ov.style.display=open?'none':'flex'; }
+  });
+}
+reqAudio?.addEventListener('timeupdate', ()=>{ if(reqAudio.currentTime>=30){ audioOK=true; updateGate(); } });
+reqVideo?.addEventListener('timeupdate', ()=>{ if(reqVideo.currentTime>=30){ videoOK=true; updateGate(); } });
+
+const moves=[
+{id:'M1', text:'Establish and practice team norms with roles and protocols'},
+{id:'M2', text:'Use a dissent-safety protocol (e.g., Fist-to-Five, Norms check)'},
+{id:'M3', text:'Start with shared outcomes and one living planning doc'},
+{id:'M4', text:'Use asset-based language and root-cause analysis'},
+{id:'M5', text:'Provide on-ramps: mentor pairing, transparent agendas, turn-taking'}
+];
+const p1Key={A:'M2',B:'M5',C:'M4',D:'M3',E:'M1'};
+function initP1(){
+  const opts=shuffle(moves.slice());
+  ['a','b','c','d','e'].forEach(k=>{
+    const sel=document.getElementById('p1'+k);
+    sel.innerHTML=''; const ph=document.createElement('option'); ph.value=''; ph.textContent='— choose a move —'; sel.appendChild(ph);
+    opts.forEach(o=>{ const opt=document.createElement('option'); opt.value=o.id; opt.textContent=o.text; sel.appendChild(opt); });
+    sel.classList.remove('wrong','right');
+  });
+  document.getElementById('p1status').textContent='';
+}
+function checkP1(){
+  let all=true;
+  [['a','A'],['b','B'],['c','C'],['d','D'],['e','E']].forEach(([k,K])=>{
+    const sel=document.getElementById('p1'+k);
+    const ok=sel.value===p1Key[K];
+    sel.classList.remove('wrong','right');
+    if(ok){ sel.classList.add('right'); } else { sel.classList.add('wrong'); all=false; }
+  });
+  const st=document.getElementById('p1status');
+  if(all){ st.innerHTML='<span class="ok">Correct! Digit 1 = <strong>7</strong></span>'; window._d1='7'; updateLockHint(); }
+  else{ st.innerHTML='<span class="bad">Some matches are off. Incorrect choices are marked in red.</span>'; }
+}
+function resetP1(){ initP1(); window._d1=null; updateLockHint(); }
+
+const p2Answer='trust grows when we do what we say invite voices and follow through';
+function initP2(){ const input=document.getElementById('p2input'); input.value=''; input.classList.remove('wrong','right'); document.getElementById('p2status').textContent=''; }
+function checkP2(){
+  const val=normalize(document.getElementById('p2input').value);
+  const ok=val===p2Answer; const el=document.getElementById('p2input');
+  el.classList.remove('wrong','right');
+  if(ok){ el.classList.add('right'); document.getElementById('p2status').innerHTML='<span class="ok">Correct! Digit 2 = <strong>4</strong></span>'; window._d2='4'; updateLockHint(); }
+  else{ el.classList.add('wrong'); document.getElementById('p2status').innerHTML='<span class="bad">Not quite. Check spacing and exact wording.</span>'; }
+}
+function resetP2(){ initP2(); window._d2=null; updateLockHint(); }
+
+const stepsCorrect=['Surface the issue and goal','Seek to understand (listen, paraphrase, clarify)','Generate options together','Decide the next step','Commit: owner + due date'];
+function renderDragList(items){ const ul=document.getElementById('dragList'); ul.innerHTML=''; items.forEach(t=>{ const li=document.createElement('li'); li.className='drag-item'; li.setAttribute('draggable','true'); li.textContent=t; ul.appendChild(li); }); enableDnD(); }
+function initP3(){ renderDragList(shuffle(stepsCorrect.slice())); document.getElementById('p3status').textContent=''; }
+function enableDnD(){
+  const list=document.getElementById('dragList');
+  list.querySelectorAll('.drag-item').forEach(item=>{
+    item.addEventListener('dragstart', e=>{ item.classList.add('dragging'); });
+    item.addEventListener('dragend', e=>{ item.classList.remove('dragging'); });
+  });
+  list.addEventListener('dragover', e=>{
+    e.preventDefault();
+    const after=getAfter(list, e.clientY);
+    const dragging=list.querySelector('.dragging'); if(!dragging) return;
+    if(after==null) list.appendChild(dragging); else list.insertBefore(dragging, after);
+  });
+  function getAfter(container,y){
+    const els=[...container.querySelectorAll('.drag-item:not(.dragging)')];
+    return els.reduce((closest,child)=>{
+      const box=child.getBoundingClientRect(); const offset=y - box.top - box.height/2;
+      if(offset<0 && offset>closest.offset){ return {offset,element:child}; } else { return closest; }
+    }, {offset:Number.NEGATIVE_INFINITY}).element;
+  }
+}
+function currentOrder(){ return [...document.querySelectorAll('#dragList .drag-item')].map(li=>li.textContent); }
+function checkP3(){
+  const order=currentOrder(); let all=true; const lis=[...document.querySelectorAll('#dragList .drag-item')];
+  for(let i=0;i<order.length;i++){ lis[i].classList.remove('wrong','right'); if(order[i]===stepsCorrect[i]){ lis[i].classList.add('right'); } else { lis[i].classList.add('wrong'); all=false; } }
+  const st=document.getElementById('p3status');
+  if(all){ st.innerHTML='<span class="ok">Nice! Digit 3 = <strong>2</strong></span>'; window._d3='2'; updateLockHint(); }
+  else{ st.innerHTML='<span class="bad">Some steps are out of order. Red items need to move.</span>'; }
+}
+function resetP3(){ initP3(); window._d3=null; updateLockHint(); }
+
+function updateLockHint(){ const hint=[window._d1||'_',window._d2||'_',window._d3||'_'].join(' '); document.querySelector('#final .lock').textContent=hint; const ready=!!(window._d1&&window._d2&&window._d3); document.getElementById('unlockBtn').disabled=!ready; }
+function unlock(){ const code=document.getElementById('finalcode').value.trim(); const ok=(window._d1+window._d2+window._d3)===code; const st=document.getElementById('finalstatus'); if(ok){ st.innerHTML='<span class="ok">Correct code. You escaped!</span>'; document.getElementById('prize').style.display='block'; } else { st.innerHTML='<span class="bad">Incorrect code. Try again.</span>'; } }
+
+initP1(); initP2(); initP3(); updateLockHint();
+</script>
+</body>
+</html>
